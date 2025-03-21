@@ -5,7 +5,7 @@ const googleProvider = new GoogleAuthProvider();
 window.googleSignIn = function googleSignIn() {
     signInWithPopup(auth, googleProvider)
         .then((result) => {
-            const user = result.user;  // Define the user from the result object
+            const user = result.user;  
             if (user.email === "admin@gmail.com") {
                 window.location.href = 'dashboard.html';
             } else {
@@ -56,7 +56,7 @@ window.showpassword = function showpassword() {
     let showPassword = document.getElementById("loginPassword");
     let show = document.getElementById("show");
     const type = showPassword.type === "text";
-    showPassword.type = type ? "password" : "text";  // Toggle password visibility
+    showPassword.type = type ? "password" : "text";   
     if (showPassword.type === "text") {
         show.innerHTML = `<i id="togglePassword" class="fa fa-eye-slash" onclick="hidepassword()"></i>`;
     }
@@ -66,7 +66,7 @@ window.hidepassword = function hidepassword() {
     let showPassword = document.getElementById("loginPassword");
     let show = document.getElementById("show");
     const type = showPassword.type === "password";
-    showPassword.type = type ? "text" : "password";  // Toggle password visibility
+    showPassword.type = type ? "text" : "password";   
     if (showPassword.type === "password") {
         show.innerHTML = `<i id="togglePassword" class="fa fa-eye" onclick="showpassword()"></i>`;
     }
@@ -121,21 +121,17 @@ let show = document.getElementById("card");
 
 
 // >>>>>>>>>>>>>category
-// Specify the category you want to display
-const selectedCategory = "view-category"; // Category select karo
+const selectedCategory = "view-category";  
 
 const snap = await getDocs(collection(db, "all-products"));
 
 snap.forEach((element) => {
     let data = element.data();
 
-    // Category match hone par card create karna
     if (data.category === selectedCategory) {
         let createElement = document.createElement("div");
         createElement.className = "food_items";
-        let productId = element.id; // Firestore document ID
-
-        // Set product ID as card ID
+        let productId = element.id; 
         createElement.id = productId;
 
         createElement.innerHTML = `
@@ -143,9 +139,7 @@ snap.forEach((element) => {
             <h1>${data.product_name}</h1>
         `;
 
-        // Add event listener to the card for redirect
         createElement.addEventListener("click", () => {
-            // Redirect to a specific page based on productId
             if (productId === "6y3JhVk6xXq9O1cESztf") {
                 window.location.href = `Continental.html?productId=${productId}`;
             } else if (productId === "WeYY4nfvuU6P7ZfeWN35") {
@@ -157,32 +151,26 @@ snap.forEach((element) => {
             } 
         
              else {
-                // Default page if no condition matches
                 window.location.href = `default_page.html?productId=${productId}`;
             }
         });
 
-        // Append the created card to the container
         document.getElementById("category_items").appendChild(createElement);
     }
 });
 
 
-// Specify the category you want to display
-const productCategory = "products"; // Change this as needed
+const productCategory = "products";  
 
 const snapProduct = await getDocs(collection(db, "all-products"));
 
 snapProduct.forEach((element) => {
     let data = element.data();
 
-    // Check if the product category matches the selected category
     if (data.category === productCategory) {
         let createElement = document.createElement("div");
         createElement.className = "card";
-        let productId = element.id; // Firestore document ID
-
-        // Set the product ID as the card ID
+        let productId = element.id; 
         createElement.id = productId;
 
         createElement.innerHTML = `
@@ -212,20 +200,17 @@ snapProduct.forEach((element) => {
 
 
 
-const continentalCategory = "continental-product"; // Change this as needed
+const continentalCategory = "continental-product";  
 
 const contProduct = await getDocs(collection(db, "all-products"));
 
 contProduct.forEach((element) => {
     let data = element.data();
 
-    // Check if the product category matches the selected category
     if (data.category === continentalCategory) {
         let createElement = document.createElement("div");
         createElement.className = "card";
-        let productId = element.id; // Firestore document ID
-
-        // Set the product ID as the card ID
+        let productId = element.id;
         createElement.id = productId;
 
         createElement.innerHTML = `
@@ -257,22 +242,20 @@ window.hide=function hide(){
 // >>>>>>>>>>.view popup
 
 window.viewDetail = async function viewDetail(cardView) {
-    
-
-    // Get the Firestore document ID from the product card
+    document.getElementById("popup").style.display = "block";
+    document.getElementById("add").style.display = "none";
+    document.getElementById("view").style.display = "flex";
     let id = cardView.parentNode.parentNode.id;
 
     try {
         const snap = await getDocs(collection(db, "all-products"));
         snap.forEach((doc) => {
             if (doc.id === id) {
-                // Get the product data from the Firestore document
                 let data = doc.data();
-                // Set the product data in the popup
                 document.getElementById("view").innerHTML = `
                     <div class="first_section">
                         <img src="${data.imageUrl}" alt="${data.product_name}" />
-                        <div>1</div>
+                        
                     </div>
                     <div class="second_section">
                         <h1>${data.product_name}</h1>
@@ -293,7 +276,6 @@ window.add = async function add(cardAdd) {
     document.getElementById("view").style.display = "none";
     document.getElementById("add").style.display = "block";
 
-    // Get the Firestore document ID from the product card
     let id = cardAdd.parentNode.parentNode.id;
 
     try {
@@ -302,9 +284,7 @@ window.add = async function add(cardAdd) {
 
         snap.forEach((doc) => {
             if (doc.id === id) {
-                // Get the product data from Firestore
                 let data = doc.data();
-                // Set the product data in the popup using simple IDs
                 document.getElementById("add").innerHTML = `
                     <img id="productImage" src="${data.imageUrl}" alt="${data.product_name}" />
                     <h1 id="productName">${data.product_name}</h1>
@@ -326,10 +306,7 @@ window.add = async function add(cardAdd) {
     }
 };
 
-
-// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-// Quantity Increment and Decrement Functions
-// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+ 
 let quantity = 1;
 
 window.addQuantity = function addQuantity() {
@@ -344,20 +321,15 @@ window.minQuantity = function minQuantity() {
     }
 };
 
-// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-// Order Function (Save to Local Storage)
-// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+ 
 window.order = function order() {
-    // Get product details using simple IDs
     const productName = document.getElementById("productName").textContent;
-    const productPrice = parseFloat(document.getElementById("productPrice").textContent);  // Convert to float
-      // Convert to float
-    const productQuantity = parseInt(document.getElementById("quantity").textContent);  // Convert to integer
+    const productPrice = parseFloat(document.getElementById("productPrice").textContent);  
+    const productQuantity = parseInt(document.getElementById("quantity").textContent); 
     const productImage = document.getElementById("productImage").src;
 
    
 
-    // Create the order item object
     const orderItem = {
         name: productName,
         price: productPrice,
@@ -366,19 +338,15 @@ window.order = function order() {
         image: productImage
     };
 
-    // Get existing orders from local storage or initialize an empty array
     let orders = JSON.parse(localStorage.getItem("orders")) || [];
     let existingOrder = orders.find(item => item.name === productName && item.image === productImage);
 
     if (existingOrder) {
-        // Update the quantity if the product already exists
         existingOrder.quantity += productQuantity;
     } else {
-        // Add a new order if it doesn't exist
         orders.push(orderItem);
     }
 
-    // Save updated orders to local storage
     localStorage.setItem("orders", JSON.stringify(orders));
 
     let book = document.getElementById("bookOrder");
