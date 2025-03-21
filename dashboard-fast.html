@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="background-color: rgb(107, 119, 129); margin: 0px; padding: 0px; color: white;">
+    <nav class="dash_nav">Dashboard</nav>
+
+    <section class="dashboard">
+        <!-- Sidebar Links -->
+        <div class="first-section">
+             
+            <div class="dash-links"><a href="dashboard.html">Home</a></div>
+            <div class="dash-links"><a href="dashboard_category.html">Category</a></div>
+            <div class="dash-links"><a href="index.html">Logout</a></div>
+        </div>
+
+         
+
+        <!-- Add Order Section -->
+         
+          
+        <section id="card-section" style="text-align: center; width: 100%;" >
+            <h1>Fast Food</h1>
+            
+            <div id="continental" style="display: grid; grid-template-columns: repeat(3,3fr); margin:10px 120px;"></div>
+        </section>
+    
+    </section>
+
+    <script type="module">
+        import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail, addDoc, collection, db, getDocs, doc } from "./firebase-config.js";
+    
+        const continentalCategory = "fast-food"; // Change this as needed
+    
+        async function loadProducts() {
+            const contProduct = await getDocs(collection(db, "all-products"));
+    
+            contProduct.forEach((element) => {
+                let data = element.data();
+    
+                // Check if the product category matches the selected category
+                if (data.category === continentalCategory) {
+                    let createElement = document.createElement("div");
+                    createElement.className = "card";
+                    let productId = element.id; // Firestore document ID
+    
+                    // Set the product ID as the card ID
+                    createElement.id = productId;
+    
+                    createElement.innerHTML = `
+                        
+                        <img src="${data.imageUrl}" alt="${data.product_name}" />
+                        <h1>${data.product_name}</h1>
+                        <p>Price: $${data.product_price}</p>
+                        
+                    `;
+                    
+                    document.getElementById("continental").appendChild(createElement);
+                }
+            });
+        }
+    
+        loadProducts();
+     
+    
+    </script>
+        
+    
+</body>
+</html>

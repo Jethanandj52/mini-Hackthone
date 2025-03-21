@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Firebase SDK Import -->
+   
+</head>
+<body style="background-color: rgb(107, 119, 129); margin: 0px; padding: 0px; color: white;">
+    <nav class="dash_nav">Dashboard</nav>
+
+    <section class="dashboard">
+        <!-- Sidebar Links -->
+        <div class="first-section">
+            <div class="dash-links"><a href="dashboard.html">Home</a></div>
+            <div class="dash-links"><a href="#order">Category</a></div>
+            <div class="dash-links"><a href="index.html">Logout</a></div>
+        </div>
+
+        <!-- Add Order Section -->
+        <section id="category1" style="text-align: center; width: 100%;">
+            <h1>CATEGORY</h1>
+            <div id="category_items" style="display: grid; grid-template-columns: repeat(3,3fr); margin:10px 120px;"></div>
+        </section>
+    </section>
+
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+  apiKey: "AIzaSyCM17uBZknhqzT_-H1A_Jc410Utj6NBppo",
+  authDomain: "mini-hackathone-35c4a.firebaseapp.com",
+  projectId: "mini-hackathone-35c4a",
+  storageBucket: "mini-hackathone-35c4a.firebasestorage.app",
+  messagingSenderId: "941968400553",
+  appId: "1:941968400553:web:7eeff773e8b1c6abdc09b8",
+  measurementId: "G-N0JDH9D0GV"
+};
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        // Initialize Firestore
+        const db = getFirestore(app);
+
+        // Wait for DOM content to load before executing
+        document.addEventListener('DOMContentLoaded', async () => {
+            const selectedCategory = "view-category"; // Category select karo
+
+            try {
+                // Fetch data from Firestore
+                const querySnapshot = await getDocs(collection(db, "all-products"));
+
+                // Iterate over the documents
+                querySnapshot.forEach((doc) => {
+                    let data = doc.data();
+
+                    // Log data to check if we have products in Firestore
+                    console.log(data);
+
+                    // Category match hone par card create karna
+                    if (data.category === selectedCategory) {
+                        let createElement = document.createElement("div");
+                        createElement.className = "food_items";
+                        let productId = doc.id; // Firestore document ID
+
+                        // Set product ID as card ID
+                        createElement.id = productId;
+
+                        createElement.innerHTML = `
+                            <img src="${data.imageUrl}" alt="${data.product_name}" />
+                            <h1>${data.product_name}</h1>
+                        `;
+
+                        // Add event listener to the card for redirect
+                        createElement.addEventListener("click", () => {
+                            // Redirect to a specific page based on productId
+                            if (productId === "6y3JhVk6xXq9O1cESztf") {
+                                window.location.href = `dashboard-continental.html?productId=${productId}`;
+                            } else if (productId === "WeYY4nfvuU6P7ZfeWN35") {
+                                window.location.href = `dashboard-fast.html?productId=${productId}`;
+                            } else if (productId === "ySJcVyjCvgGrm1YrdDG3") {
+                                window.location.href = `dashboard-coldrink.html?productId=${productId}`;
+                            } else if (productId === "kudRO2j5Y61EgDhRifSt") {
+                                window.location.href = `dashboard-main.html?productId=${productId}`;
+                            } else {
+                                // Default page if no condition matches
+                                window.location.href = `default_page.html?productId=${productId}`;
+                            }
+                        });
+
+                        // Append the created card to the container
+                        document.getElementById("category_items").appendChild(createElement);
+                    }
+                });
+            } catch (error) {
+                console.error("Error fetching data from Firestore: ", error);
+            }
+        });
+    </script>
+</body>
+</html>
