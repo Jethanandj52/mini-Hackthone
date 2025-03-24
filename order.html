@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Details</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body style="background-color: #706e6e;"  >
+
+    <section class="nav" style=" background-color: #333;">
+        <img src="assets/food logo.png"></img>
+        <div class="nav_link">
+            <div class="items"><a href="home.html">HOME</a></div>
+            <div class="items"><a href="about.html">ABOUT</a> </div>
+            <div class="items"><a href="products.html">PRODUCTS</a></div>
+            <div class="items"><a href="contact.html">CONTACT</a></div>
+        </div>
+        <div class="nav_link">
+            <div class="searching"  >
+                <input type="text" placeholder="searching....." class="search">
+            <i class="fa fa-search" id="" style="color: black;"></i>
+            </div>
+            
+            <div class="items"><a href="index.html"><i class="fa fa-sign-out"></i> </a></div>
+        </div>
+    </section>
+
+    <div id="orderBody" >
+        <table id="ordersTable">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Price (PKR)</th>
+                    <th>Quantity</th>
+                    <th>Total (PKR)</th>
+                    <th>Image</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="ordersTableBody">
+            </tbody>
+            <tfoot>
+                <tr class="totalRow">
+                    <td colspan="5" style="text-align: right;">Final Amount:</td>
+                    <td id="finalAmount">PKR 0</td>
+                </tr>
+            </tfoot>
+        </table>
+    
+        <button class="button" id="checkoutButton" onclick="checkout()">Checkout</button>
+    
+    </div>
+    
+    <section id="popup" class="checkoutPop">
+        <div id="payment">
+            <input type="text" id="name" placeholder="Enter Your Name"><br>
+            <input type="text" id="address" placeholder="Enter Your Address"><br>
+            <input type="text" id="email" placeholder="Enter Your Phone Number"><br>
+            <select id="paymentMethod">
+                <option value="">Choose Your Payment Method</option>
+                <option value="EasyPaisa">Easy Paisa</option>
+                <option value="Cash">Cash</option>
+            </select>
+            <button type="button" onclick="submitOrder()">Submit</button>
+        </div>
+    </section>
+
+    <section id="errorPopup" class="errorPop">
+        <div id="errorMessageBox">
+            <h3 id="errorMessage">Error Occurred</h3>
+            <button onclick="closeError()">OK</button>
+        </div>
+    </section>
+
+    <script>
+function showError(message) {
+    document.getElementById("errorMessage").textContent = message;
+    document.getElementById("errorPopup").style.display = "flex";
+}
+
+function closeError() {
+    document.getElementById("errorPopup").style.display = "none";
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const tableBody = document.getElementById("ordersTableBody");
+    let orders = JSON.parse(localStorage.getItem("orders")) || [];
+    let finalAmount = 0;
+
+    if (orders.length === 0) {
+        tableBody.innerHTML = "<tr><td colspan='6'>No orders found.</td></tr>";
+        return;
+    }
+
+    orders.forEach((order, index) => {
+        let total = order.price * order.quantity;
+        finalAmount += total;
+
+        let row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${order.name}</td>
+            <td>PKR ${order.price.toFixed(2)}</td>
+            <td>${order.quantity}</td>
+            <td>PKR ${total.toFixed(2)}</td>
+            <td><img src="${order.image}" alt="Product Image"></td>
+            <td><button class="deleteButton" onclick="deleteOrder(${index})">Delete</button></td>
+        `;
+        tableBody.appendChild(row);
+    });
+
+    document.getElementById("finalAmount").textContent = `PKR ${finalAmount.toFixed(2)}`;
+});
+
+function deleteOrder(index) {
+    let orders = JSON.parse(localStorage.getItem("orders")) || [];
+    orders.splice(index, 1);
+    localStorage.setItem("orders", JSON.stringify(orders));
+    location.reload();
+}
+
+ function checkout() {
+            let orders = JSON.parse(localStorage.getItem("orders")) || [];
+            document.getElementById("popup").style.display="block"
+            if (orders.length === 0) {
+                 
+             
+                document.getElementById("payment").innerHTML=`
+        
+        <h3>Please Select Any Items</h3>
+        <button onclick="ok()">OK</button>`
+        
+                return;
+            }
+
+             
+
+
+        }
+
+        function ok(){
+            document.getElementById("popup").style.display="none"
+        }
+
+
+function submitOrder() {
+    const name = document.getElementById("name").value;
+    const address = document.getElementById("address").value;
+    const phone = document.getElementById("email").value;
+    const paymentMethod = document.getElementById("paymentMethod").value;
+
+    if (!name || !address || !phone || !paymentMethod) {
+        showError("Please fill all the fields!");
+        return;
+    }
+
+    document.getElementById("payment").innerHTML = `
+        <img src="assets/complete.gif" alt="">
+        <h1>Thank You For Choosing Us</h1>
+    `;
+    setTimeout(() => {
+        document.getElementById("popup").style.display = "none";
+        localStorage.removeItem("orders");
+        location.reload();
+    }, 4000);
+}
+
+        
+    </script>
+</body>
+</html>

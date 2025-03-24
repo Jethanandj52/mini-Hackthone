@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="background-color: rgb(107, 119, 129); margin: 0px; padding: 0px;">
+    <nav class="dash_nav">Dashboard</nav>
+
+    <section class="dashboard">
+        <div class="first-section" >
+            <div class="dash-links"><a href="#">Home</a></div>
+            <div class="dash-links"><a href="dashboard_category.html">Category</a></div>
+            <div class="dash-links"><a href="index.html">Logout</a></div>
+        </div>
+
+        <div class="second-section">
+            <div id="add-order" class="add-order-section">
+                <h2>Add New Product</h2>
+                <input type="text" placeholder="Product Name" id="product_name"><br>
+                <input type="text" placeholder="Price" id="price"><br>
+                <input type="text" placeholder="Image URL" id="url"><br>
+                <input type="text" placeholder="Description" id="disc"><br>
+                <!-- Dropdown for categories -->
+                <select id="category_select">
+                    <option value="" disabled selected>Select Category</option>
+                    <option value="view-category">ALL Category</option>
+                    <option value="products">Display Card</option>
+                </select><br>
+                <button type="button" onclick="submit()">Submit</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="dashboard_popup" style="display: none;">
+        <div id="confirm_popup"></div>
+    </section>
+
+
+    <section id="bookOrder">
+        <div class="book">
+            <h4>Your Product Is Booked </h4>
+            <img src="assets/booked.gif" alt="">
+        </div>
+    </section>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCM17uBZknhqzT_-H1A_Jc410Utj6NBppo",
+            authDomain: "mini-hackathone-35c4a.firebaseapp.com",
+            projectId: "mini-hackathone-35c4a",
+            storageBucket: "mini-hackathone-35c4a.firebasestorage.app",
+            messagingSenderId: "941968400553",
+            appId: "1:941968400553:web:7eeff773e8b1c6abdc09b8",
+            measurementId: "G-N0JDH9D0GV"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Load categories dynamically from Firestore
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const querySnapshot = await getDocs(collection(db, "all-products"));
+                const categorySelect = document.getElementById("category_select");
+    
+                let viewCategoryProducts = []; // To store products of "view-category"
+    
+                // Loop through products and extract only "view-category" products
+                querySnapshot.forEach((doc) => {
+                    let data = doc.data();
+                    if (data.category === "view-category") {
+                        viewCategoryProducts.push(data); // Collect view-category products
+                    }
+                });
+    
+                // Dynamically create "view-category" options in the dropdown
+                viewCategoryProducts.forEach((product) => {
+                    let productOption = document.createElement("option");
+                    productOption.value = product.product_name;
+                    productOption.textContent = product.product_name; // Display product name
+                    categorySelect.appendChild(productOption);
+                });
+    
+                // Listen for category selection change
+                categorySelect.addEventListener("change", (event) => {
+                    // Convert category to lowercase and replace spaces with hyphens
+                    let category = event.target.value.toLowerCase().replace(/\s+/g, '-');
+                    loadProductsByCategory(category); // Load selected category products
+                });
+    
+            } catch (error) {
+                console.error("Error fetching categories from Firestore: ", error);
+            }
+        });
+
+        // Submit the product to Firestore
+        window.submit = async function submit() {
+            let product_name = document.getElementById("product_name").value.trim();
+            let product_price = document.getElementById("price").value.trim();
+            let imageUrl = document.getElementById("url").value.trim();
+            let category = document.getElementById("category_select").value; // Corrected category selector
+            let product_description = document.getElementById("disc").value.trim();
+
+            // Validation checks
+            if (!product_name || !product_price || !imageUrl || !category || !product_description) {
+                document.getElementById("dashboard_popup").style.display = "flex";
+                document.getElementById("confirm_popup").innerHTML = `
+                    <h2>Missing Information</h2>
+                    <p>Please fill in all fields to proceed.</p>
+                    <button id="cancels">Cancel</button>
+                `;
+                document.getElementById("cancels").addEventListener("click", cancelUpdate);
+                return;
+            }
+
+            function cancelUpdate() {
+                document.getElementById("dashboard_popup").style.display = "none"; // Hide the popup
+            }
+
+            try {
+                const docRef = await addDoc(collection(db, "all-products"), {
+                    product_name: product_name,
+                    product_price: product_price,
+                    imageUrl: imageUrl,
+                    category: category,
+                    product_description: product_description,
+                });
+                 
+                
+            } catch (error) {
+                console.log("Error adding document: ", error);
+                alert("Error: " + error.message);
+            }
+            let book = document.getElementById("bookOrder");
+    book.style.display = "block";
+    setTimeout(() => {
+        book.style.display = "none";
+    }, 3000);
+    document.getElementById("popup").style.display = "none";
+        };
+
+        product_name.innerHTML=""
+        product_price.innerHTML=""
+        imageUrl.innerHTML=""
+        category.innerHTML=""
+        product_description.innerHTML=""
+    </script>
+</body>
+</html>

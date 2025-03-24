@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Food</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <section class="nav" style=" background-color: #333;">
+        <img src="assets/food logo.png"></img>
+        <div class="nav_link">
+            <div class="items"><a href="home.html">HOME</a></div>
+            <div class="items"><a href="about.html">ABOUT</a> </div>
+            <div class="items"><a href="products.html">PRODUCTS</a></div>
+            <div class="items"><a href="contact.html">CONTACT</a></div>
+        </div>
+        <div class="nav_link">
+            <div class="searching">
+                <input type="text" placeholder="searching....." class="search">
+            <i class="fa fa-search" id="search-icon"></i>
+            </div>
+            <div class="items" onclick="window.location.href='order.html'"> <i class="fa fa-shopping-cart"></i> </div>
+            <div class="items"><a href=""><i class="fa fa-sign-out"></i>
+            </a></div>
+        </div>
+    </section>
+
+    
+
+
+ 
+
+    <section class="card-section">
+        
+        <h1>ALL PRODUCTS</h1>
+        <div id="continental"></div>
+        
+    </section>
+     
+
+ 
+
+
+ 
+
+ 
+<section>
+    <div class="footer_container">
+        <div class="footer_containt">
+            <div class="contact">
+                <div>
+                    <img src="assets/food logo.png" alt="" class="footer_logo">
+                    <div class="social_contact">
+                        <a href="https://www.linkedin.com" target="_blank">
+                            <i class="fab fa-linkedin fa-2x"></i>
+                          </a>
+                        
+                          <a href="https://www.whatsapp.com" target="_blank">
+                            <i class="fab fa-whatsapp fa-2x"></i>
+                          </a>
+                        
+                          <a href="https://www.facebook.com" target="_blank">
+                            <i class="fab fa-facebook fa-2x"></i>
+                          </a>
+                        
+                          <a href="https://www.instagram.com" target="_blank">
+                            <i class="fab fa-instagram fa-2x"></i>
+                          </a>
+                </div>
+                </div>
+                    <div>
+                            <ul>
+                                <li class="contact_heading">About</li>
+                                <li><a href="">Intorduction</a></li>
+                                <li><a href="">Chairman Message</a></li>
+                                <li><a href="">Annual Report</a></li>
+                                <li><a href="">Bank Detail</a></li>
+
+                            </ul>
+                 </div>
+                    <div>
+                        <ul>
+                            <li class="contact_heading">Explore</li>
+                            <li><a href="">News</a></li>
+                            <li><a href="">Media</a></li>
+                            <li><a href="">Contact</a></li>
+                            <li><a href="">Donations</a></li>
+
+                        </ul>
+                </div>
+                <div class="contact">
+                    <div class="contact">
+                        <div style="position: relative;">
+                            <a href="https://www.google.com/maps/place/Block+18+Gulistan-e-Johar,+Karachi,+Pakistan" 
+                               target="_blank" 
+                               style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 10;"></a>
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14474.81322770733!2d67.11765612248188!3d24.908099944891365!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3eb3391d1a2c1e8f%3A0x9ed540c1e4a38f95!2sBlock%2018%20Gulistan-e-Johar%2C%20Karachi%2C%20Pakistan!5e0!3m2!1sen!2s!4v1742487270879!5m2!1sen!2s"
+                                style="width: 400px; height: 200px; border-radius: 10px; border: 0;" allowfullscreen="" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+            </div>
+<hr>
+
+             
+            <div class="  ip">IP address data powered by <a href="">&nbsp; IPinfo</a></div>
+            <br><hr>
+            <div class="footer_employee ip">Copyright &copy; 2024 by Saylani Welfare Int Trust</div>
+        </div>
+
+    </div>
+ </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- >>>>>>>>>>>>> veiw popup -->
+   <section id="popup">
+  <div id="cancel">
+    <i class="fa fa-times cancel-icon" onclick="hide()"></i>
+  </div>
+
+  
+  <div id="view"></div>
+   
+  <div id="add"></div>
+
+   </section>
+
+   <section id="bookOrder">
+    <div class="book">
+        <h4>Your Order Is Booked Please Checkout</h4>
+        <img src="assets/booked.gif" alt="">
+    </div>
+</section>
+
+
+ 
+
+   <script type="module">
+    import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail, addDoc, collection, db, getDocs, doc } from "./firebase-config.js";
+
+    const continentalCategory = "continentail-product";
+    const coldrink="coldrink"
+    const fastfood="fast-food"
+    const mainfood="main-food"
+
+    async function loadProducts() {
+        const contProduct = await getDocs(collection(db, "all-products"));
+
+        contProduct.forEach((element) => {
+            let data = element.data();
+
+            if (data.category === coldrink || data.category === fastfood || data.category === continentalCategory || data.category === mainfood)  {
+                let createElement = document.createElement("div");
+                createElement.className = "card";
+                let productId = element.id;  
+                createElement.id = productId;
+
+                createElement.innerHTML = `
+                   
+                    <img src="${data.imageUrl}" alt="${data.product_name}" />
+                    <h1>${data.product_name}</h1>
+                    <p>Price: $${data.product_price}</p>
+                    <div class="cart-btn">
+                        <button onclick="add(this)" class="cart">Add to cart</button>
+                        <button onclick="viewDetail(this)" class="cart">View Detail</button>
+                    </div>
+                `;
+                
+                document.getElementById("continental").appendChild(createElement);
+            }
+        });
+    }
+
+    loadProducts();
+
+    window.hide=function hide(){
+    document.getElementById("popup").style.display="none";
+}
+
+// >>>>>>>>>>.view popup
+
+window.viewDetail = async function viewDetail(cardView) {
+    document.getElementById("popup").style.display = "block";
+    document.getElementById("add").style.display = "none";
+    document.getElementById("view").style.display = "flex";
+
+    let id = cardView.parentNode.parentNode.id;
+
+    try {
+        const snap = await getDocs(collection(db, "all-products"));
+        snap.forEach((doc) => {
+            if (doc.id === id) {
+                let data = doc.data();
+                document.getElementById("view").innerHTML = `
+                    <div class="first_section">
+                        <img src="${data.imageUrl}" alt="${data.product_name}" />
+                         
+                    </div>
+                    <div class="second_section">
+                        <h1>${data.product_name}</h1>
+                        <p>Price: $${data.product_price}</p>
+                        <p>Product Description: ${data.product_description}</p>
+                    </div>
+                `;
+            }
+        });
+    } catch (error) {
+        console.error("Error fetching product data for view detail:", error);
+    }
+};
+
+// >>>>>>>>>>.view popup
+window.add = async function add(cardAdd) {
+    document.getElementById("popup").style.display = "block";
+    document.getElementById("view").style.display = "none";
+    document.getElementById("add").style.display = "block";
+
+    let id = cardAdd.parentNode.parentNode.id;
+
+    try {
+        const snap = await getDocs(collection(db, "all-products"));
+        let quantity = 1;
+
+        snap.forEach((doc) => {
+            if (doc.id === id) {
+                let data = doc.data();
+                document.getElementById("add").innerHTML = `
+                    <img id="productImage" src="${data.imageUrl}" alt="${data.product_name}" />
+                    <h1 id="productName">${data.product_name}</h1>
+                    <div><b>Price: </b><span id="productPrice">${data.product_price}</span><span> PKR</span></div>
+                    <div>
+                        <b>Quantity:</b>
+                        <button onclick="minQuantity()" class="quantityButton minButton">-</button>
+                        <span class="quantity" id="quantity">${quantity}</span>
+                        <button onclick="addQuantity()" class="quantityButton">+</button>
+                    </div>
+                    <div>
+                        <button class="orderButton" onclick="order()">Order</button>
+                    </div>
+                `;
+            }
+        });
+    } catch (error) {
+        console.error("Error fetching product data for add to cart:", error);
+    }
+};
+
+
+ 
+let quantity = 1;
+
+window.addQuantity = function addQuantity() {
+    quantity += 1;
+    document.getElementById("quantity").innerHTML = quantity;
+};
+
+window.minQuantity = function minQuantity() {
+    if (quantity > 1) {
+        quantity -= 1;
+        document.getElementById("quantity").innerHTML = quantity;
+    }
+};
+
+ 
+window.order = function order() {
+    const productName = document.getElementById("productName").textContent;
+    const productPrice = parseFloat(document.getElementById("productPrice").textContent);   
+    const productQuantity = parseInt(document.getElementById("quantity").textContent);   
+    const productImage = document.getElementById("productImage").src;
+
+    const orderItem = {
+        name: productName,
+        price: productPrice,
+        
+        quantity: productQuantity,
+        image: productImage
+    };
+
+    let orders = JSON.parse(localStorage.getItem("orders")) || [];
+    let existingOrder = orders.find(item => item.name === productName && item.image === productImage);
+
+    if (existingOrder) {
+        existingOrder.quantity += productQuantity;
+    } else {
+        orders.push(orderItem);
+    }
+
+    localStorage.setItem("orders", JSON.stringify(orders));
+
+    let book = document.getElementById("bookOrder");
+    book.style.display = "block";
+    setTimeout(() => {
+        book.style.display = "none";
+    }, 2200);
+    document.getElementById("popup").style.display = "none";
+};
+
+
+
+</script>
+
+</body>
+</html>
+ 

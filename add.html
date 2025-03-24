@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="background-color: rgb(107, 119, 129); margin: 0px; padding: 0px;">
+    <nav class="dash_nav">Dashboard</nav>
+
+    <section class="dashboard">
+             <div class="first-section">
+            <div class="dash-links"><a href="dashboard.html">Home</a></div>
+            <div class="dash-links"><a href="#add-order">Add Order</a></div>
+            <div class="dash-links"><a href="#order">Order</a></div>
+            <div class="dash-links"><a href="#logout">Logout</a></div>
+        </div>
+
+            <div class="second-section">
+                     
+
+                         <div id="add-order" class="add-order-section">
+                <h2>Add New Product</h2>
+                <input type="text" placeholder="Product Name" id="product_name"><br>
+                <input type="text" placeholder="Price" id="price"><br>
+                <input type="text" placeholder="Image URL" id="url"><br>
+                <input type="text" placeholder="Category" id="category1"><br>
+                <input type="text" placeholder="Description" id="disc"><br>
+                <button type="button" onclick="submit()">Submit</button>
+            </div>
+          
+        </div>
+    </section>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
